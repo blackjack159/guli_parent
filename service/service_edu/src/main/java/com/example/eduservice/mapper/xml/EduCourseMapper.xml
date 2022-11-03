@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.eduservice.mapper.EduCourseMapper">
+
+<!--sql statement: 根据课程id查询课程确认信息-->
+<!--    resultType = return type-->
+    <select id="getPublishCourseInfo" resultType="com.example.eduservice.entity.vo.CoursePublishVo">
+               SELECT
+            ec.id,
+            ec.title,
+            ec.cover,
+            ec.lesson_num AS lessonNum,
+            ec.price,
+            s1.title AS subjectLevelOne,
+            s2.title AS subjectLevelTwo,
+            t.name AS teacherName
+        FROM
+            edu_course ec LEFT OUTER JOIN edu_course_description ecd ON ec.id= ecd.id
+                LEFT OUTER JOIN edu_teacher t ON ec.teacher_id = t.id
+                LEFT OUTER JOIN edu_subject s1 ON ec.subject_parent_id = s1.id
+                LEFT OUTER JOIN edu_subject s2 ON ec.subject_id = s2.id
+        WHERE
+            ec.id = #{Id}
+    </select>
+
+    <select id="getBaseCourseInfo" resultType="com.example.eduservice.entity.frontvo.CourseWebVo">
+        SELECT
+            ec.id,
+            ec.title,
+            ec.cover,
+            ec.lesson_num AS lessonNum,
+            ec.price,
+            ec.cover,
+            ec.buy_count as buyCount,
+            ec.view_count as viewCount,
+            esd.description,
+            s1.title AS subjectLevelOne,
+            s1.id as subjectLevelOneId,
+            s2.id as subjectLevelTwoId,
+            s2.title AS subjectLevelTwo,
+            t.name AS teacherName,
+            t.id as teacherId,
+            t.avatar,
+            t.intro
+        FROM
+            edu_course ec
+                LEFT JOIN edu_teacher t ON ec.teacher_id = t.id
+                LEFT JOIN edu_subject s1 ON ec.subject_parent_id = s1.id
+                LEFT JOIN edu_subject s2 ON ec.id = s2.id
+                left join edu_course_description esd on ec.id = esd.id
+        WHERE
+            ec.id = #{id}
+    </select>
+
+<!--    <resultMap id="collectResult" type="Collects">-->
+<!--        <collection property="collect" javaType="ArrayList" column="id" ofType="CourseWebVo" select="selectCollections"/>-->
+<!--    </resultMap>-->
+
+
+
+    <select id="getCollectCourseInfo" resultType="com.example.eduservice.entity.frontvo.CourseWebVo">
+        SELECT
+            ec.id AS collectionId,
+            ec.course_id AS id,
+            c.title,
+            c.cover,
+            c.price,
+            t.name AS teacherName
+        FROM
+            edu_course_collect ec
+                LEFT JOIN edu_course c ON ec.course_id = c.id
+                LEFT JOIN edu_teacher t ON c.teacher_id = t.id
+        WHERE
+           ec.member_id = #{arg0}
+    </select>
+
+    <select id="getLikeCollectCourseInfo" resultType="com.example.eduservice.entity.frontvo.CourseWebVo">
+        SELECT
+            ec.id,
+            ec.course_id AS courseId,
+            c.title,
+            c.cover,
+            c.price,
+            t.name AS teacherName
+        FROM
+            edu_course_collect ec
+                LEFT JOIN edu_course c ON ec.course_id = c.id
+                LEFT JOIN edu_teacher t ON c.teacher_id = t.id
+        WHERE
+           ec.member_id = #{a} AND c.title LIKE #{b}
+    </select>
+</mapper>

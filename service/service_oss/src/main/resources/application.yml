@@ -1,0 +1,25 @@
+#cloud:
+#  aws:
+#    credentials:
+#      access-key:AKIA5Q4MNMRWREW6ZRMT
+#      secret-key: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
+#    region:
+#      static: ap-southeast-1
+#    stack:
+#      auto: false
+#
+#application:
+#  bucket:
+#    name: ckcossbucket
+#
+#
+#spring:
+#  servlet:
+#    multipart:
+#      enabled: true
+#      file-size-threshold: 2MB
+#      max-file-size: 5MB
+#      max-request-size: 10MB
+#
+#server:
+#  port: 8002
